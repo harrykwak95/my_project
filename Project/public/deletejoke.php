@@ -4,21 +4,14 @@
         $pdo = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'ijdbuser', 'localpassword!@');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        $sql = 'SELECT `joketext` FROM `joke`';
-        $result = $pdo->query($sql);
+        $sql = 'DELETE FROM `joke` WHERE `id` = :id';
 
-        while ($row = $result->fetch()) {
-            $jokes[] = $row['joketext'];
-        }
-        
-        $title = '유머 글 목록';
+        $stmt = $pdo->prepare($sql);
 
-        ob_start();
+        $stmt->bindValue(':id', $_POST['id']);
+        $stmt->execute();
 
-        include __DIR__ . '/../templates/jokes.html.php';
-
-        $output = ob_get_clean();
-
+        header('location: jokes.php');
 
     } 
     catch (ExceptionType $e) {

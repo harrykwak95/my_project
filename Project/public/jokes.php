@@ -4,12 +4,8 @@
         $pdo = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'ijdbuser', 'localpassword!@');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        $sql = 'SELECT `joketext` FROM `joke`';
-        $result = $pdo->query($sql);
-
-        while ($row = $result->fetch()) {
-            $jokes[] = $row['joketext'];
-        }
+        $sql = 'SELECT `joketext`, `id` FROM `joke`';
+        $jokes = $pdo->query($sql);
         
         $title = '유머 글 목록';
 

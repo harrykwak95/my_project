@@ -2,8 +2,11 @@
     
     if (isset($_POST['joketext'])) {
         try{
-            $pdo = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'ijdbuser', 'localpassword!@');
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            include __DIR__ . '/../includes/DatabaseConnection.php';
+            include __DIR__ . '/../includes/DatabaseFunctions.php';
+            
+            
+            /* 함수 미 사용시 반복 사용
 
             $sql = 'INSERT INTO `joke` SET
             `joketext` = :joketext,
@@ -14,6 +17,9 @@
             $stmt->bindValue(':joketext', $_POST['joketext']);
 
             $stmt->execute();
+            */
+
+            insertJoke($pdo, $_POST['joketext'], 2);
 
             header('location: jokes.php');
 

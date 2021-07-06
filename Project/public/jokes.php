@@ -1,13 +1,22 @@
 <?php
 
     try{
-        $pdo = new PDO('mysql:host=localhost;dbname=ijdb;charset=utf8', 'ijdbuser', 'localpassword!@');
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        $sql = 'SELECT `joketext`, `id` FROM `joke`';
+        include __DIR__ . '/../includes/DatabaseConnection.php';
+        include __DIR__ . '/../includes/DatabaseFunctions.php';
+
+        /* 기존 코드        
+        $sql = 'SELECT `joke`.`id`, `joketext`, `name`, `email`
+                FROM `joke`
+                INNER JOIN `author`
+                ON `authorid` = `author`.`id`';
         $jokes = $pdo->query($sql);
+        */
+
+        $jokes = allJokes($pdo);
         
         $title = '유머 글 목록';
+
+        $totalJokes = totalJokes($pdo);
 
         ob_start();
 

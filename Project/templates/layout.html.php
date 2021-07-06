@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="jokes.css">
+    <link rel="stylesheet" href="/css/jokes.css">
     <title><?=$title?></title>
 </head>
+
 <body>
     <header>
         <h1>유머</h1>
@@ -25,4 +27,5 @@
         &copy; IJDB 2017;
     </footer>
 </body>
+
 </html>

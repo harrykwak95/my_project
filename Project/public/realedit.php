@@ -1,20 +1,26 @@
 <?php
 include __DIR__ . '/../includes/DatabaseConnection.php';
-include __DIR__ . '/../includes/DatabaseFunctions.php';
+include __DIR__ . '/../includes/UpgradeDatabaseFunctions.php';
 
 try{
     if (isset($_POST['joketext'])) {
-        updateJoke($pdo, $_POST['jokeid'], $_POST['joketext'], 1);
+
+        save($pdo, 'joke', 'id', ['id' => $_POST['jokeid'],
+            'joketext' => $_POST['joketext'],
+            'jokedate' => new DateTime(),
+            'authorId' => 1]);
 
         header('location: jokes.php');
     } else {
-        $joke = getJoke($pdo, $_GET['id']);
+        if (isset($_GET['id'])) {
+            $joke = findById($pdo, 'joke', 'id', $_GET['id']);
+        }
 
         $title = '유머 글 수정';
 
         ob_start();
 
-        include __DIR__ . '/../templates/editjoke.html.php';
+        include __DIR__ . '/../templates/realedit.html.php';
 
         $output = ob_get_clean();
     }

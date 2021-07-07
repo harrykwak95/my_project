@@ -3,7 +3,7 @@
     if (isset($_POST['joketext'])) {
         try{
             include __DIR__ . '/../includes/DatabaseConnection.php';
-            include __DIR__ . '/../includes/DatabaseFunctions.php';
+            include __DIR__ . '/../includes/UpgradeDatabaseFunctions.php';
             
             
             /* 함수 미 사용시 반복 사용
@@ -19,7 +19,16 @@
             $stmt->execute();
             */
 
+            /* 유머 추가 1 형태
             insertJoke($pdo, $_POST['joketext'], 2);
+            */
+
+            //insertJoke($pdo, ['authorId' => 1, 'jokeText' => $_POST['joketext'], 'jokedate' => new DateTime()]);
+
+            //범용
+            insert($pdo, 'joke', ['authorId' => 1,
+                            'jokeText' => $_POST['joketext'],
+                            'jokedate' => new DateTime()]);
 
             header('location: jokes.php');
 

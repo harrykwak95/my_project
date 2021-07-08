@@ -2,12 +2,20 @@
 
     try{
         include __DIR__ . '/../includes/DatabaseConnection.php';
-        include __DIR__ . '/../classes/DatabaseTable.php';
+        include __DIR__ . '/../includes/UpgradeDatabaseFunctions.php';
 
-        $jokeTable = new DatabaseTable($pdo, 'joke', 'id');
-        $authorTable = new DatabaseTable($pdo, 'author', 'id');
+        /* 기존 코드        
+        $sql = 'SELECT `joke`.`id`, `joketext`, `name`, `email`
+                FROM `joke`
+                INNER JOIN `author`
+                ON `authorid` = `author`.`id`';
+        $jokes = $pdo->query($sql);
+        */
 
-        $result = $jokesTable ->findAll();
+        // $jokes = alljokes($pdo);
+        
+        // 게시글 목록 보기
+        $result = findAll($pdo, 'joke');
 
         $jokes = [];
         foreach ($result as $joke) {
@@ -25,7 +33,8 @@
         
         $title = '유머 글 목록';
 
-        $totalJokes = $jokesTable->total();
+        //$totalJokes = totalJokes($pdo);
+        $totalJokes = total($pdo, 'joke');
 
         ob_start();
 
@@ -35,7 +44,7 @@
 
 
     } 
-    catch (PDOExceptionType $e) {
+    catch (ExceptionType $e) {
         $title = '오류가 발생했습니다.';
         $output = '데이터베이스 오류:' .
                     $e->getMessage() . ', 위치: ' . $e->getFile() . ':' . $e->getLine();

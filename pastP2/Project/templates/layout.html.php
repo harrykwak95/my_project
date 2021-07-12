@@ -14,8 +14,8 @@
     <nav>
         <ul>
             <li><a href="index.php">Home</a></li>
-            <li><a href="index.php?action=list">유머 목록</a></li>
-            <li><a href="index.php?action=edit">유머 등록</a></li>
+            <li><a href="jokes.php">유머</a></li>
+            <li><a href="realedit.php">유머 글 추가</a></li>
         </ul>
     </nav>
 

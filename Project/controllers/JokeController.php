@@ -9,6 +9,13 @@ class JokeController{
 
     }
 
+    
+    public function home() {
+        $title = '인터넷 유머 세상';
+
+        return ['template' => 'home.html.php' , 'title' => $title];
+    }
+
     public function list() {
         $result = $this ->jokesTable ->findAll();
         $joke[] = [];
@@ -25,24 +32,16 @@ class JokeController{
 
         $title = '유머 글 목록';
 
-        $totalJoeks = $this->jokesTable->total();
+        $totalJokes = $this->jokesTable->total();
 
-        ob_start();
-
-        include __DIR__ . '/../templates/jokes.html.php';
-
-        $output = ob_get_clean();
+        return ['template' => 'jokes.html.php',
+                'title' => $title,
+                'variables' => [
+                    'totalJokes' => $totalJokes,
+                    'jokes' => $jokes
+                ]];
     }
 
-    public function home() {
-        $title = '인터넷 유머 세상';
-
-        ob_start();
-
-        include __DIR__ . '/../templates/home.html.php';
-
-        $output = ob_get_clean();
-    }
 
     public function delete() {
         $this->jokesTable->delete($_POST['id']);
@@ -57,7 +56,22 @@ class JokeController{
             $joke['authorid'] = 1;
 
             $this->jokesTable->save($joke);
+
+            header('location: index.php?action=list');
         }
+        else {
+            if (isset($_GET['id'])) {
+                $joke = $this->jokesTable->findById($_GET['id']);
+            }
+
+            $title = '유머 글 수정';
+        }
+        return ['template' => 'realedit.html.php',
+                'title' => $title,
+                'variables' => [
+                    'joke' => $joke ?? null
+                ]];
+
     }
 
 }

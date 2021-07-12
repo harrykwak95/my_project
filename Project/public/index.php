@@ -1,11 +1,39 @@
 <?php
+function loadTemplate($templateFileName, $variables =[])
+{
+    extract($variables);
 
-$title = '인터넷 유머 세상';
+    ob_start();
+    include __DIR__ . '/../templates/' . $templateFileName;
 
-ob_start();
+    return ob_get_clean();
+}
 
-include __DIR__ . '/../templates/home.html.php';
+try {
+    include __DIR__ . '/../includes/DatabaseConnection.php';
+    include __DIR__ . '/../classes/DatabaseTable.php';
+    include __DIR__ . '/../controllers/JokeController.php';
 
-$output = ob_get_clean();
+    $jokesTable = new DatabaseTable($pdo, 'joke', 'id');
+    $authorTable = new DatabaseTable($pdo, 'author', 'id');
+
+    $jokeController = new JokeController($jokesTable, $authorTable);
+
+    $action = $_GET['action'] ?? 'home';
+
+    $page = $jokeController->$action();
+
+    $title = $page['title'];
+
+    if (isset($page['variables'])) {
+        $output = loadTemplate($page['template'], $page['variables']);
+    } else {
+        $output = loadTemplate($pasge['template']);
+    }
+} catch (PDOException $e) {
+    $title = '오류가 발생했습니다.';
+
+    $output = '데이터베이스 오류: ' . $e->getMessage() . ', 위치' . $e->getFile() . ':' . $e->getLine();
+}
 
 include __DIR__ . '/../templates/layout.html.php';

@@ -8,7 +8,7 @@
             <?php echo htmlspecialchars($joke['name'], ENT_QUOTES, 'UTF-8'); ?></a>
             작성일:<?php
                 $date = new DateTime($joke['jokedate']);
-                echo $date->format(' jS F Y'); $joke['jokedate']; ?>)
+                echo $date->format(' jS F Y'); ?>)
             
 
         <a href="index.php?action=edit&id=<?=$joke['id']?>">수정</a>

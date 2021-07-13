@@ -1,34 +1,28 @@
 <?php
-function loadTemplate($templateFileName, $variables =[])
-{
-    extract($variables);
-
-    ob_start();
-    include __DIR__ . '/../templates/' . $templateFileName;
-
-    return ob_get_clean();
-}
-
-try {
+try{
     include __DIR__ . '/../includes/DatabaseConnection.php';
     include __DIR__ . '/../classes/DatabaseTable.php';
-    include __DIR__ . '/../controllers/JokeController.php';
+    include __DIR__ . '/../controllers/' . $_GET['controller'] . '.php';
 
     $jokesTable = new DatabaseTable($pdo, 'joke', 'id');
-    $authorTable = new DatabaseTable($pdo, 'author', 'id');
-
-    $jokeController = new JokeController($jokesTable, $authorTable);
+    $authorsTable = new DatabaseTable($pdo, 'author', 'id');
+    
+    $controller = new RegisterController($authorsTable);
 
     $action = $_GET['action'] ?? 'home';
 
-    // 20210713 추가
-    if ($action == strtolower($action)) {
-       $page = $jokeController->$action();
+    $controllerName = $_GET['controller'] ?? 'joke';
+
+    if($action == strtolower($action) && $controllerName == strtolower($controllerName)){
+        $className = ucfirst($controllerName) . 'Controller';
+        
+        include __DIR__ . '/../controllers/' . $className . '.php';
+        
+        $page = $controller->$action();
     } else {
         http_response_code(301);
-        header('location: index.php?action=' . strtolower($action));
+        header('location: index.php?controller=' . strtolower($controllerName) . '$action=' . strtolower($action));
     }
-    // 20210713 추가
 
 
     $title = $page['title'];

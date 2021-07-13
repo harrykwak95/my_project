@@ -18,11 +18,13 @@ class JokeController{
 
     public function list() {
         $result = $this ->jokesTable ->findAll();
-        $joke[] = [];
+        
+        $jokes = [];
         foreach ($result as $joke) {
             $author = $this->authorsTable->findById($joke['authorid']);
+            
             $jokes[] = [
-                'id' => $joke['id'],
+                    'id' => $joke['id'],
                     'joketext' => $joke['joketext'],
                     'jokedate' => $joke['jokedate'],
                     'name' => $author['name'],
@@ -46,11 +48,12 @@ class JokeController{
     public function delete() {
         $this->jokesTable->delete($_POST['id']);
 
-        header('location: jokes.php');
+        header('location: index.php?action=list');
     }
 
     public function edit() {
         if (isset($_POST['joke'])) {
+            
             $joke = $_POST['joke'];
             $joke['jokedate'] = new DateTime();
             $joke['authorid'] = 1;
@@ -65,12 +68,14 @@ class JokeController{
             }
 
             $title = '유머 글 수정';
-        }
+        
         return ['template' => 'realedit.html.php',
                 'title' => $title,
                 'variables' => [
                     'joke' => $joke ?? null
-                ]];
+                ]
+            ];
+        }
 
     }
 

@@ -95,9 +95,9 @@ class DatabaseTable
         // :primaryKey 변수 설정
         $fields['primarykey'] = $fields['id'];
     
-        $fields = processDates($fields);
+        $fields = $this -> processDates($fields);
     
-        query($query, $fields);
+        $this -> query($query, $fields);
     }
 
     /**

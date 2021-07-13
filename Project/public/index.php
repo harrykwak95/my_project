@@ -28,7 +28,7 @@ try {
     if (isset($page['variables'])) {
         $output = loadTemplate($page['template'], $page['variables']);
     } else {
-        $output = loadTemplate($pasge['template']);
+        $output = loadTemplate($page['template']);
     }
 } catch (PDOException $e) {
     $title = '오류가 발생했습니다.';

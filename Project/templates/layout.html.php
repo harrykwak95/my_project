@@ -13,9 +13,9 @@
     </header>
     <nav>
         <ul>
-            <li><a href="index.php">Home</a></li>
-            <li><a href="index.php?action=list">유머 목록</a></li>
-            <li><a href="index.php?action=edit">유머 등록</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/joke/list">유머 목록</a></li>
+            <li><a href="/joke/edit">유머 등록</a></li>
         </ul>
     </nav>
 

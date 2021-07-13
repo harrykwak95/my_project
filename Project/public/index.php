@@ -12,24 +12,42 @@ function loadTemplate($templateFileName, $variables =[])
 try {
     include __DIR__ . '/../includes/DatabaseConnection.php';
     include __DIR__ . '/../classes/DatabaseTable.php';
-    include __DIR__ . '/../controllers/JokeController.php';
 
     $jokesTable = new DatabaseTable($pdo, 'joke', 'id');
     $authorTable = new DatabaseTable($pdo, 'author', 'id');
 
-    $jokeController = new JokeController($jokesTable, $authorTable);
+    // route 변수 없을 시 'joke/home' 할당
 
-    $action = $_GET['action'] ?? 'home';
 
-    // 20210713 추가
-    if ($action == strtolower($action)) {
-       $page = $jokeController->$action();
-    } else {
-        http_response_code(301);
-        header('location: index.php?action=' . strtolower($action));
+    $route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
+
+    if ($route == strtolower($route)) {
+        if ($route === 'joke/list') {
+            include __DIR__ . '/../controllers/JokeController.php';
+            $controller = new JokeController($jokesTable, $authorTable);
+            $page = $controller->list();
+        } elseif ($route === '') {
+            include __DIR__ . '/../controllers/JokeController.php';
+            $controller = new JokeController($jokesTable, $authorTable);
+            $page = $controller->home();
+        } elseif ($route === 'joke/edit') {
+            include __DIR__ . '/../controllers/JokeController.php';
+            $controller = new JokeController($jokesTable, $authorTable);
+            $page = $controller->edit();
+        } elseif ($route === 'joke/delete') {
+            include __DIR__ . '/../controllers/JokeController.php';
+            $controller = new JokeController($jokesTable, $authorTable);
+            $page = $controller->delete();
+        } elseif ($route === 'register') {
+            include __DIR__ . '/../controllers/RegisterController.php';
+            $controller = new RegisterController($authorTable);
+            $page = $controller->showForm();
+        }
     }
-    // 20210713 추가
-
+    else {
+        http_response_code(301);
+        header('location: ' . strtolower($route));
+    }
 
     $title = $page['title'];
 

@@ -1,3 +1,3 @@
-<h2>인터넷 유머 세상</h2></br>
-<p>인터넷 유머 세상에 오신 것을 환영합니다.</p>
-<p>인터넷 유머 세상 test</p>
+<h2>PHP STUDY.</h2></br>
+<p>PHP IS BEST LANGUAGE.</p>
+<p>COME ON PHP WORLD</p>

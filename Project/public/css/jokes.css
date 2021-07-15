@@ -1,9 +1,9 @@
 * {margin: 0; padding: 0; }
 body {font-family: Arial, Helvetica, Sans-serif; }
-header {display: block;  background-color: #34495e; padding: 20px; border-bottom: 5px solid #757575;}
+header {display: block;  background-color: #bdc3c7; padding: 20px; border-bottom: 5px solid #757575;}
 h1 {font-weight: normal; padding: 1.5em; color: white; text-shadow: 1px 1px 0px #444; width: 1000px; margin: auto;}
 
-nav {background-color: #443A5C;}
+nav {background-color: #9c88ff;}
 
 nav a {color: white; text-decoration: none;}
 nav a:hover {color: #ddd;}

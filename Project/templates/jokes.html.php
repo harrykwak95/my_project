@@ -1,4 +1,4 @@
-<p><?=$totalJokes?>개 유머 글이 있습니다.</p>
+<p><?=$totalJokes?>개 글이 있습니다.</p>
 <?php foreach ($jokes as $joke): ?>
 <blockquote>
     <p>

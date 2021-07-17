@@ -1,6 +1,8 @@
-<?
+<?php
+namespace Ijdb\Controller;
+use \Hanbit\DatabaseTable;
 
-class RegisterController
+class Register
 {
     private $authorsTable;
 
@@ -12,5 +14,4 @@ class RegisterController
     public function showForm(){
         
     }
-
 }

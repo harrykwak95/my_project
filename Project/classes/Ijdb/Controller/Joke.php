@@ -1,5 +1,8 @@
 <?php
-class JokeController{
+namespace Ijdb\Controller;
+use \Hanbit\DatabaseTable;
+
+class Joke{
     private $authorsTable;
     private $jokesTable;
 
@@ -11,7 +14,7 @@ class JokeController{
 
     
     public function home() {
-        $title = '인터넷 유머 세상';
+        $title = 'PHP STUDY';
 
         return ['template' => 'home.html.php' , 'title' => $title];
     }
@@ -32,7 +35,7 @@ class JokeController{
             ];
         }
 
-        $title = '유머 글 목록';
+        $title = 'DOCUMENT LIST';
 
         $totalJokes = $this->jokesTable->total();
 
@@ -55,7 +58,7 @@ class JokeController{
         if (isset($_POST['joke'])) {
             
             $joke = $_POST['joke'];
-            $joke['jokedate'] = new DateTime();
+            $joke['jokedate'] = new \DateTime();
             $joke['authorid'] = 1;
 
             $this->jokesTable->save($joke);
@@ -67,7 +70,7 @@ class JokeController{
                 $joke = $this->jokesTable->findById($_GET['id']);
             }
 
-            $title = '유머 글 수정';
+            $title = 'DOCUMENT EDIT';
         
         return ['template' => 'realedit.html.php',
                 'title' => $title,

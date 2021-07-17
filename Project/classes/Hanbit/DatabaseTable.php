@@ -1,11 +1,13 @@
 <?php
+namespace Hanbit;
+
 class DatabaseTable
 {
     private $pdo;
     private $table;
     private $primarykey;
 
-    public function __construct(PDO $pdo, string $table, string $primarykey) {
+    public function __construct(\PDO $pdo, string $table, string $primarykey) {
         $this->pdo = $pdo;
         $this->table = $table;
         $this->primarykey = $primarykey;
@@ -130,7 +132,7 @@ class DatabaseTable
     private function processDates($fields)
     {
         foreach ($fields as $key => $value) {
-            if($value instanceof DateTime) {
+            if($value instanceof \DateTime) {
                 $fields[$key] = $value->format('Y-m-d H:i:s');
             }
         }
@@ -149,7 +151,7 @@ class DatabaseTable
                 $record[$this -> primarykey] = null;
             }
             $this->insert($record);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->update($record);
         }
     }

@@ -1,160 +1,132 @@
 <?php
 namespace Hanbit;
 
-class DatabaseTable
-{
-    private $pdo;
-    private $table;
-    private $primarykey;
+class DatabaseTable {
+	private $pdo;
+	private $table;
+	private $primaryKey;
 
-    public function __construct(\PDO $pdo, string $table, string $primarykey) {
-        $this->pdo = $pdo;
-        $this->table = $table;
-        $this->primarykey = $primarykey;
-    }
+	public function __construct(\PDO $pdo, string $table, string $primaryKey) {
+		$this->pdo = $pdo;
+		$this->table = $table;
+		$this->primaryKey = $primaryKey;
+	}
 
-    /**
-     * 쿼리 실행
-     */
+	private function query($sql, $parameters = []) {
+		$query = $this->pdo->prepare($sql);
+		$query->execute($parameters);
+		return $query;
+	}	
 
-     private function query($sql, $parameters=[])
-     {
-        $query = $this -> pdo -> prepare($sql);
-        $query->execute($parameters);
-        return $query;
-    }
-    
-    /**
-     * 테이블 전체 로우 실행
-     */
-    public function total()
-    {
-        $query = $this->query('SELECT COUNT(*)
-        FROM `' . $this->table . '`');
-        $row = $query->fetch();
-        return $row[0];
-    }
-    /**
-     * ID로 테이블 데이터 가져오기
-     */
-     public function findById($value)
-     {
-        $query = 'SELECT * FROM `' . $this->table . '`
-        WHERE `'. $this->primarykey . '` =:value';
-    
-        $parameters = [
-            'value' => $value
-        ];
-    
-        $query = $this->query($query, $parameters);
-    
-        return $query->fetch();
-    }
-    /**
-     * 테이블 데이터 삽입
-     */
-    function insert($fields)
-    {
-        $query = 'INSERT INTO `' . $this -> table . '` (';
-        
-        foreach ($fields as $key => $value) {
-            $query .= '`' . $key . '`,';
-        }
+	public function total() {
+		$query = $this->query('SELECT COUNT(*) FROM `' . $this->table . '`');
+		$row = $query->fetch();
+		return $row[0];
+	}
 
-        $query = rtrim($query, ',');
-    
-        $query .= ') VALUES (';
+	public function findById($value) {
+		$query = 'SELECT * FROM `' . $this->table . '` WHERE `' . $this->primaryKey . '` = :value';
 
-        foreach ($fields as $key => $value) {
-            $query .= ':' . $key . ',';
-        }
-    
-        $query = rtrim($query, ',');
-    
-        $query .= ')';
-    
-        $fields = $this -> processDates($fields);
-    
-        $this->query($query, $fields);
-    }
+		$parameters = [
+			'value' => $value
+		];
 
-    /**
-     * 테이블 데이터 수정
-     */
+		$query = $this->query($query, $parameters);
 
-    private function update($fields)
-    {
-        $query = ' UPDATE `' . $this->table . '` SET ';
-    
-        foreach ($fields as $key => $value) {
-            $query .= '`' . $key . '` = :' . $key . ',';
-        }
-    
-        $query = rtrim($query, ',');
-        
-        $query .= ' WHERE `' . $this->primarykey . '` = :primarykey';
-        
-        // :primaryKey 변수 설정
-        $fields['primarykey'] = $fields['id'];
-    
-        $fields = $this -> processDates($fields);
-    
-        $this -> query($query, $fields);
-    }
+		return $query->fetch();
+	}
 
-    /**
-     * 테이블 데이터 삭제
-     */
+	public function find($column, $value) {
+		$query = 'SELECT * FROM ' . $this->table . ' WHERE ' . $column . ' = :value';
 
-    public function delete($id)
-    {
-        $parameters = [':id' => $id];
-        $this->query('DELETE FROM `' . $this-> table . '`
-        WHERE `' . $this-> primarykey . '` = :id', $parameters);
-    }
+		$parameters = [
+			'value' => $value
+		];
 
-    /**
-    * 테이블 모든 데이터 가져오기
-    */
+		$query = $this->query($query, $parameters);
+
+		return $query->fetchAll();
+	}
+
+	private function insert($fields) {
+		$query = 'INSERT INTO `' . $this->table . '` (';
+
+		foreach ($fields as $key => $value) {
+			$query .= '`' . $key . '`,';
+		}
+
+		$query = rtrim($query, ',');
+
+		$query .= ') VALUES (';
 
 
-    public function findAll()
-    {
-        $result = $this -> query('SELECT * FROM ' . $this->table);
-    
-        return $result->fetchAll();
-    }
+		foreach ($fields as $key => $value) {
+			$query .= ':' . $key . ',';
+		}
 
-    /**
-    * 날짜 형식 처리
-    */
+		$query = rtrim($query, ',');
 
-    private function processDates($fields)
-    {
-        foreach ($fields as $key => $value) {
-            if($value instanceof \DateTime) {
-                $fields[$key] = $value->format('Y-m-d H:i:s');
-            }
-        }
+		$query .= ')';
 
-        return $fields;
-    }
+		$fields = $this->processDates($fields);
 
-    /**
-    * 데이터 삽입 또는 수정 선택 처리
-    */
+		$this->query($query, $fields);
+	}
 
-    public function save($record)
-    {
-        try {
-            if ($record[$this -> primarykey] == '') {
-                $record[$this -> primarykey] = null;
-            }
-            $this->insert($record);
-        } catch (\PDOException $e) {
-            $this->update($record);
-        }
-    }
+
+	private function update($fields) {
+		$query = ' UPDATE `' . $this->table .'` SET ';
+
+		foreach ($fields as $key => $value) {
+			$query .= '`' . $key . '` = :' . $key . ',';
+		}
+
+		$query = rtrim($query, ',');
+
+		$query .= ' WHERE `' . $this->primaryKey . '` = :primaryKey';
+
+		// :primaryKey 변수 설정
+		$fields['primaryKey'] = $fields['id'];
+
+		$fields = $this->processDates($fields);
+
+		$this->query($query, $fields);
+	}
+
+
+	public function delete($id ) {
+		$parameters = [':id' => $id];
+
+		$this->query('DELETE FROM `' . $this->table . '` WHERE `' . $this->primaryKey . '` = :id', $parameters);
+	}
+
+
+	public function findAll() {
+		$result = $this->query('SELECT * FROM ' . $this->table);
+
+		return $result->fetchAll();
+	}
+
+	private function processDates($fields) {
+		foreach ($fields as $key => $value) {
+			if ($value instanceof \DateTime) {
+				$fields[$key] = $value->format('Y-m-d H:i:s');
+			}
+		}
+
+		return $fields;
+	}
+
+
+	public function save($record) {
+		try {
+			if ($record[$this->primaryKey] == '') {
+				$record[$this->primaryKey] = null;
+			}
+			$this->insert($record);
+		}
+		catch (\PDOException $e) {
+			$this->update( $record);
+		}
+	}
 }
-
-?>
